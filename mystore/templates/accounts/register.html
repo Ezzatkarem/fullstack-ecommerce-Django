@@ -1,0 +1,49 @@
+{% extends 'core/base.html' %}
+{% load form_tags %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-sm-10 col-md-6 col-lg-3 shadow p-2 rounded border" style="max-width: 320px; font-size: 0.85rem;">
+        <h2 class="mb-2 text-center" style="font-size: 1.2rem;">Create Account</h2>
+
+        <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+
+            <!-- User fields -->
+            {% for field in form %}
+                <div class="mb-1">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {{ field|add_class:"form-control form-control-sm" }}
+                    {% if field.help_text %}
+                        <div class="form-text small">{{ field.help_text }}</div>
+                    {% endif %}
+                    {% if field.errors %}
+                        <div class="text-danger small">{{ field.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <!-- Profile image -->
+            {% for field in profile_form %}
+                <div class="mb-1">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {{ field|add_class:"form-control form-control-sm" }}
+                    {% if field.errors %}
+                        <div class="text-danger small">{{ field.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary w-100 btn-sm">Register</button>
+        </form>
+
+        <p class="mt-1 text-center small">
+            Already have an account? <a href="{% url 'accounts:login' %}">Login</a>
+        </p>
+    </div>
+</div>
+
+
+{% endblock %}

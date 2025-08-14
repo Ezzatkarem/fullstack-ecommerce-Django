@@ -1,0 +1,79 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<div class="container py-4">
+  <div class="row">
+
+    <!-- Sidebar: Categories ثابتة على الشمال -->
+    <div class="col-md-3">
+      <h5>Categories</h5>
+      <div class="list-group">
+        <a href="{% url 'shop' %}" class="list-group-item {% if not active_category %}active{% endif %}">
+          All
+        </a>
+        {% for category in categories %}
+          <a href="{% url 'shop' %}?category={{ category.slug }}"
+             class="list-group-item {% if active_category == category.slug %}active{% endif %}">
+            {{ category.name }}
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Products -->
+    <div class="col-md-9">
+      {% if products %}
+        <div class="row g-3">
+          {% for product in products %}
+          <div class="col-12 col-sm-6 col-md-4">
+            <div class="card h-100 shadow-sm hover-shadow" style="transition: transform 0.2s;">
+              {% if product.image %}
+                <img src="{{ product.image.url }}" class="card-img-top" style="height:200px; object-fit:cover;">
+              {% endif %}
+              <div class="card-body">
+                <h6 class="card-title">
+                  <a href="{% url 'product_detail' product.slug %}" class="text-decoration-none">
+                    {{ product.name }}
+                  </a>
+                </h6>
+                <p class="mb-1">${{ product.price }}</p>
+                <p class="text-muted mb-0">Stock: {{ product.stock }}</p>
+
+              </div>
+              {% if user.is_authenticated %}
+              <div class="card-footer d-flex justify-content-center">
+                <a href="{% url 'cart:add_to_cart' product.slug %}" class="btn btn-sm btn-success">
+                  Add to Cart
+                </a>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p>No products found.</p>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .card.hover-shadow:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  }
+  .list-group-item:hover {
+    background-color: #7a36aa;
+    color: white;
+    cursor: pointer;
+  }
+  .list-group-item.active {
+    background-color: #7a36aa;
+    color: white;
+  }
+</style>
+
+{% endblock %}

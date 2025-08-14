@@ -1,0 +1,50 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <!-- User Info -->
+    <div class="col-md-4">
+        <div class="card p-3 mb-3 text-center">
+            {% if profile and profile.image %}
+                <img src="{{ profile.image.url }}" class="rounded-circle" width="120" height="120" style="object-fit:cover;">
+            {% else %}
+                <img src="{{ MEDIA_URL }}profile_images/default.jpg" class="rounded-circle" width="120" height="120" style="object-fit:cover;">
+            {% endif %}
+            <h5 class="mt-3">{{ user.first_name }} {{ user.last_name }}</h5>
+            <p>{{ user.email }}</p>
+        </div>
+    </div>
+
+    <!-- Purchased Items -->
+    <div class="col-md-8">
+        <h4>Purchased Items</h4>
+        {% if purchased_items %}
+            <div class="list-group mb-3">
+                {% for item in purchased_items %}
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        {% if item.product.image %}
+                            <img src="{{ item.product.image.url }}" width="80" height="80" style="object-fit:cover; margin-right:10px;">
+                        {% else %}
+                            <img src="{{ MEDIA_URL }}profile_images/default.jpg" width="80" height="80" style="object-fit:cover; margin-right:10px;">
+                        {% endif %}
+                        <div>
+                            <h6>{{ item.product.name }}</h6>
+                            <p class="mb-0">Price: ${{ item.product.price|floatformat:2 }}</p>
+                            <p class="mb-0">Quantity: {{ item.quantity }}</p>
+<p class="mb-0">Subtotal: ${{ item.subtotal|floatformat:2 }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="text-end">
+                <h5>Total: ${{ total|floatformat:2 }}</h5>
+            </div>
+        {% else %}
+            <p>No purchased items yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
